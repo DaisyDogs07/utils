@@ -31,6 +31,17 @@ module.exports = {
     };
   })(),
   ObjectUtils: (function ObjectUtils() {
+    function getProperties(obj) {
+      let properties = [];
+      for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
+        properties.push(
+          ...Object.getOwnPropertyNames(i).filter(v => !properties.includes(v)),
+          ...Object.getOwnPropertySymbols(i).filter(v => !properties.includes(v))
+        );
+      }
+      return properties;
+    }
+
     function getPropertyNames(obj) {
       let names = [];
       for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
@@ -45,17 +56,6 @@ module.exports = {
         symbols.push(...Object.getOwnPropertySymbols(i).filter(v => !symbols.includes(v)));
       }
       return symbols;
-    }
-
-    function getProperties(obj) {
-      let properties = [];
-      for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
-        properties.push(
-          ...Object.getOwnPropertyNames(i).filter(v => !properties.includes(v)),
-          ...Object.getOwnPropertySymbols(i).filter(v => !properties.includes(v))
-        );
-      }
-      return properties;
     }
 
     function getPrototypeChain(obj) {
@@ -77,9 +77,9 @@ module.exports = {
     }
 
     return {
+      getProperties,
       getPropertyNames,
       getPropertySymbols,
-      getProperties,
       getPrototypeChain,
       hasProperty
     };
