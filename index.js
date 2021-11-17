@@ -10,11 +10,9 @@ module.exports = {
       let date = isoDate.split('T')[0].split('-'),
         time = isoDate.split('T')[1].replace('Z', '').split(':'),
         amOrPm = +time[0] >= 12 ? 'PM' : 'AM',
-        hour = amOrPm === 'AM' ? (+time[0] || 12) : ((time[0] - 12) || 12),
-        minute = time[1],
-        seconds = time[2],
+        hour = (amOrPm === 'AM' ? +time[0] : time[0] - 12) || 12,
         months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      return `${months[date[1] - 1]} ${date[2]}, ${date[0]} ${hour}:${minute}:${seconds} ${amOrPm}`;
+      return `${months[date[1] - 1]} ${date[2]}, ${date[0]} ${hour}:${time[1]}:${time[2]} ${amOrPm}`;
     }
 
     return {
