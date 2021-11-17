@@ -35,7 +35,7 @@ module.exports = {
   ObjectUtils: (function ObjectUtils() {
     function getPropertyNames(obj) {
       let names = [];
-      for (let i = obj; i; i = Object.getPrototypeOf(i)) {
+      for (let i = obj; i !== null; i = Object.getPrototypeOf(i)) {
         names.push(...Object.getOwnPropertyNames(i).filter(v => !names.includes(v)));
       }
       return names;
@@ -43,7 +43,7 @@ module.exports = {
 
     function getPropertySymbols(obj) {
       let symbols = [];
-      for (let i = obj; i; i = Object.getPrototypeOf(i)) {
+      for (let i = obj; i !== null; i = Object.getPrototypeOf(i)) {
         symbols.push(...Object.getOwnPropertySymbols(i).filter(v => !symbols.includes(v)));
       }
       return symbols;
@@ -51,7 +51,7 @@ module.exports = {
 
     function getProperties(obj) {
       let properties = [];
-      for (let i = obj; i; i = Object.getPrototypeOf(i)) {
+      for (let i = obj; i !== null; i = Object.getPrototypeOf(i)) {
         properties.push(
           ...Object.getOwnPropertyNames(i).filter(v => !properties.includes(v)),
           ...Object.getOwnPropertySymbols(i).filter(v => !properties.includes(v))
@@ -62,7 +62,7 @@ module.exports = {
 
     function getPrototypeChain(obj) {
       let chain = [];
-      for (let i = obj; i; i = Object.getPrototypeOf(i)) {
+      for (let i = obj; i !== null; i = Object.getPrototypeOf(i)) {
         chain[chain.length] = i.hasOwnProperty('constructor')
           ? i.constructor.name
           : undefined;
@@ -71,7 +71,7 @@ module.exports = {
     }
 
     function hasProperty(obj, prop) {
-      for (let i = obj; i; i = Object.getPrototypeOf(i)) {
+      for (let i = obj; i !== null; i = Object.getPrototypeOf(i)) {
         if (i.hasOwnProperty(prop))
           return true;
       }
