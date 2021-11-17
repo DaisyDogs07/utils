@@ -9,7 +9,7 @@ module.exports = {
         isoDate = new Date(new Date(isoDate).getTime() + (36e5 * offset)).toISOString();
       let date = isoDate.split('T')[0].split('-'),
         time = isoDate.split('T')[1].replace('Z', '').split(':'),
-        amOrPm = Number(time[0]) >= 12 ? 'PM' : 'AM',
+        amOrPm = +time[0] >= 12 ? 'PM' : 'AM',
         hour = amOrPm === 'AM' ? (+time[0] || 12) : ((time[0] - 12) || 12),
         minute = time[1],
         seconds = time[2],
@@ -34,9 +34,6 @@ module.exports = {
   })(),
   ObjectUtils: (function ObjectUtils() {
     function getPropertyNames(obj) {
-      if (obj === undefined || obj === null)
-        throw new TypeError('Cannot convert undefined or null to object');
-      obj = Object(obj);
       let names = [];
       for (let i = obj; i; i = Object.getPrototypeOf(i)) {
         names.push(...Object.getOwnPropertyNames(i).filter(v => !names.includes(v)));
@@ -45,9 +42,6 @@ module.exports = {
     }
 
     function getPropertySymbols(obj) {
-      if (obj === undefined || obj === null)
-        throw new TypeError('Cannot convert undefined or null to object');
-      obj = Object(obj);
       let symbols = [];
       for (let i = obj; i; i = Object.getPrototypeOf(i)) {
         symbols.push(...Object.getOwnPropertySymbols(i).filter(v => !symbols.includes(v)));
@@ -56,9 +50,6 @@ module.exports = {
     }
 
     function getProperties(obj) {
-      if (obj === undefined || obj === null)
-        throw new TypeError('Cannot convert undefined or null to object');
-      obj = Object(obj);
       let properties = [];
       for (let i = obj; i; i = Object.getPrototypeOf(i)) {
         properties.push(
@@ -70,9 +61,6 @@ module.exports = {
     }
 
     function getPrototypeChain(obj) {
-      if (obj === undefined || obj === null)
-        throw new TypeError('Cannot convert undefined or null to object');
-      obj = Object(obj);
       let chain = [];
       for (let i = obj; i; i = Object.getPrototypeOf(i)) {
         chain[chain.length] = i.hasOwnProperty('constructor')
@@ -83,9 +71,6 @@ module.exports = {
     }
 
     function hasProperty(obj, prop) {
-      if (obj === undefined || obj === null)
-        throw new TypeError('Cannot convert undefined or null to object');
-      obj = Object(obj);
       for (let i = obj; i; i = Object.getPrototypeOf(i)) {
         if (i.hasOwnProperty(prop))
           return true;
