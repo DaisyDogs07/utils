@@ -38,7 +38,7 @@ module.exports = {
         length = objProps.length,
         proto = Object.getPrototypeOf(obj);
       if (proto !== null)
-        Object.setPrototypeOf(objClone, clone.call(this, proto));
+        Object.setPrototypeOf(objClone, clone(proto));
       for (let i = 0; i < length; i++) {
         Object.defineProperty(objClone, objProps[i], Object.getOwnPropertyDescriptor(obj, objProps[i]));
       }
