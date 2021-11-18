@@ -31,7 +31,7 @@ module.exports = {
     };
   })(),
   ObjectUtils: (function ObjectUtils() {
-    // Functions exactly like Object::Clone in the v8 C++ api
+    // Functions exactly like Object::Clone in the v8 C++ api... Mostly
     function clone(obj) {
       const objClone = {},
         objProps = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)],
