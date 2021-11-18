@@ -59,10 +59,7 @@ module.exports = {
     function getPropertyDescriptor(obj, prop) {
       for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
         if (i.hasOwnProperty(prop)) {
-          const desc = Object.getOwnPropertyDescriptor(i, prop);
-          if (i !== obj)
-            desc.enumerable = false;
-          return desc;
+          return Object.getOwnPropertyDescriptor(i, prop);
         }
       }
     }
