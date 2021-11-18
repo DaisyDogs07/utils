@@ -58,9 +58,8 @@ module.exports = {
 
     function getPropertyDescriptor(obj, prop) {
       for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
-        if (i.hasOwnProperty(prop)) {
+        if (i.hasOwnProperty(prop))
           return Object.getOwnPropertyDescriptor(i, prop);
-        }
       }
     }
 
