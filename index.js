@@ -8,7 +8,7 @@ module.exports = {
         isoDate = new Date(isoDate).toISOString();
       if (offset)
         isoDate = new Date(new Date(isoDate).getTime() + (36e5 * offset)).toISOString();
-      let date = isoDate.split('T')[0].split('-'),
+      const date = isoDate.split('T')[0].split('-'),
         time = isoDate.split('T')[1].replace('Z', '').split(':'),
         amOrPm = +time[0] >= 12 ? 'PM' : 'AM',
         hour = (amOrPm === 'AM' ? +time[0] : time[0] - 12) || 12;
@@ -21,7 +21,7 @@ module.exports = {
   })(),
   NumberUtils: (function NumberUtils() {
     function numberWithCommas(num = 0) {
-      let arr = num.toString().split('.');
+      const arr = num.toString().split('.');
       arr[0] = arr[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       return arr.join('.');
     }
@@ -31,6 +31,20 @@ module.exports = {
     };
   })(),
   ObjectUtils: (function ObjectUtils() {
+    // Functions exactly like Object::Clone in the v8 C++ api
+    function clone(obj) {
+      const objClone = {},
+        objProps = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)],
+        length = objProps.length,
+        proto = Object.getPrototypeOf(obj);
+      if (proto !== null)
+        Object.setPrototypeOf(objClone, clone.call(this, proto));
+      for (let i = 0; i < length; i++) {
+        Object.defineProperty(objClone, objProps[i], Object.getOwnPropertyDescriptor(obj, objProps[i]));
+      }
+      return objClone;
+    }
+
     function getProperties(obj) {
       let properties = [];
       for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
@@ -42,8 +56,19 @@ module.exports = {
       return properties;
     }
 
+    function getPropertyDescriptor(obj, prop) {
+      for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
+        if (i.hasOwnProperty(prop)) {
+          const desc = Object.getOwnPropertyDescriptor(i, prop);
+          if (i !== obj)
+            desc.enumerable = false;
+          return desc;
+        }
+      }
+    }
+
     function getPropertyNames(obj) {
-      let names = [];
+      const names = [];
       for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
         names.push(...Object.getOwnPropertyNames(i).filter(v => !names.includes(v)));
       }
@@ -51,7 +76,7 @@ module.exports = {
     }
 
     function getPropertySymbols(obj) {
-      let symbols = [];
+      const symbols = [];
       for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
         symbols.push(...Object.getOwnPropertySymbols(i).filter(v => !symbols.includes(v)));
       }
@@ -59,7 +84,7 @@ module.exports = {
     }
 
     function getPrototypeChain(obj) {
-      let chain = [];
+      const chain = [];
       for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
         chain[chain.length] = i.hasOwnProperty('constructor')
           ? i.constructor.name
@@ -77,7 +102,9 @@ module.exports = {
     }
 
     return {
+      clone,
       getProperties,
+      getPropertyDescriptor,
       getPropertyNames,
       getPropertySymbols,
       getPrototypeChain,
