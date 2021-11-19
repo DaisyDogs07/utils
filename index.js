@@ -1,4 +1,4 @@
-module.exports = {
+const utils = {
   DateUtils: (function DateUtils() {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     function parseDate(isoDate = new Date().toISOString(), offset = 0) {
@@ -17,6 +17,17 @@ module.exports = {
 
     return {
       parseDate
+    };
+  })(),
+  FunctionUtils: (function FunctionUtils() {
+    const {
+      bind,
+      call
+    } = Function.prototype,
+      uncurryThis = bind.bind(call);
+
+    return {
+      uncurryThis
     };
   })(),
   NumberUtils: (function NumberUtils() {
@@ -117,3 +128,7 @@ module.exports = {
     };
   })()
 };
+
+if (typeof window !== 'undefined')
+  Object.assign(window, utils);
+else module.exports = utils;
