@@ -9,7 +9,7 @@ declare module 'utils' {
   }
 
   interface NumberUtils {
-    numberWithCommas(mun?: number): string;
+    numberWithCommas(num?: number): string;
   }
 
   interface ObjectUtils {
