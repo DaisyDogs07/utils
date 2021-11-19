@@ -1,36 +1,28 @@
 declare module 'utils' {
-  interface DateUtils {
+  export interface DateUtils {
     parseDate(isoDate: string | number | Date, offset?: number): string;
   }
 
-  interface FunctionUtils {
+  export interface FunctionUtils {
     applyBind<T extends (this: unknown, ...args: unknown[]) => unknown>(fn: T, ...argsArray: Parameters<T>[]): (thisArg?: ThisParameterType<T>, argsArray?: Parameters<T>) => ReturnType<T>;
     uncurryThis<T extends (this: unknown, ...args: unknown[]) => unknown>(fn: T, ...argsArray: Parameters<T>[]): (thisArg?: ThisParameterType<T>, ...args: Parameters<T>) => ReturnType<T>;
   }
 
-  interface NumberUtils {
+  export interface NumberUtils {
     numberWithCommas(num?: number): string;
   }
 
-  interface ObjectUtils {
+  export interface ObjectUtils {
     clone<T>(obj: T): T;
     getProperties(obj: any): PropertyKey[];
     getPropertyDescriptor(obj: any, prop: PropertyKey): PropertyDescriptor;
     getPropertyNames(obj: any): string[];
     getPropertySymbols(obj: any): symbol[];
-    getPrototypeChain(obj: any): (string | undefined)[];
+    getPrototypeChain(obj: any): string[];
     hasProperty(obj: any, prop: PropertyKey): boolean;
   }
 
-  interface StringUtils {
+  export interface StringUtils {
     toArgs(str?: string): string[];
-  }
-
-  export {
-    DateUtils,
-    FunctionUtils,
-    NumberUtils,
-    ObjectUtils,
-    StringUtils
   }
 }
