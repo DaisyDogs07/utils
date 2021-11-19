@@ -21,13 +21,14 @@ const utils = {
   })(),
   FunctionUtils: (function FunctionUtils() {
     const {
+      apply,
       bind,
       call
-    } = Function.prototype,
-      uncurryThis = bind.bind(call);
+    } = Function.prototype;
 
     return {
-      uncurryThis
+      applyBind: bind.bind(apply),
+      uncurryThis: bind.bind(call)
     };
   })(),
   NumberUtils: (function NumberUtils() {
