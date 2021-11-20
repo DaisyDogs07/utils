@@ -4,8 +4,8 @@ declare module 'utils' {
   }
 
   export interface FunctionUtils {
-    applyBind<T extends (this: unknown, ...args: unknown[]) => unknown>(fn: T, ...argsArray: Parameters<T>[]): (thisArg?: ThisParameterType<T>, argsArray?: Parameters<T>) => ReturnType<T>;
-    uncurryThis<T extends (this: unknown, ...args: unknown[]) => unknown>(fn: T, ...argsArray: Parameters<T>[]): (thisArg?: ThisParameterType<T>, ...args: Parameters<T>) => ReturnType<T>;
+    applyBind<T extends (this: any, ...args: any[]) => void>(fn: T, ...argsArray: Parameters<T>): (thisArg?: ThisParameterType<T>, argsArray?: Parameters<T>) => ReturnType<T>;
+    uncurryThis<T extends (this: any, ...args: any[]) => void>(fn: T, ...argsArray: Parameters<T>): (thisArg?: ThisParameterType<T>, ...args: Parameters<T>) => ReturnType<T>;
   }
 
   export interface NumberUtils {
