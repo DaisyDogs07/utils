@@ -96,7 +96,9 @@ const utils = {
       for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
         chain[chain.length] = i.hasOwnProperty('constructor')
           ? i.constructor.name
-          : undefined;
+          : typeof i === 'function'
+            ? i.name
+            : undefined;
       }
       return chain;
     }
