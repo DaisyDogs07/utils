@@ -10,6 +10,7 @@ declare module 'utils' {
 
   export const NumberUtils: {
     numberWithCommas(num?: number): string;
+    random(min?: number, max?: number): number;
   }
 
   export const ObjectUtils: {

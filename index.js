@@ -38,8 +38,23 @@ const utils = {
       return arr.join('.');
     }
 
+    function random(min = 0, max = min + 1) {
+      if (max <= min)
+        return min;
+      let origMin = min;
+      if (min < 0) {
+        max -= min;
+        min = 0;
+      }
+      let result = (Math.random() * (max - min)) + min;
+      return origMin < 0
+        ? result + origMin
+        : result;
+    }
+
     return {
-      numberWithCommas
+      numberWithCommas,
+      random
     };
   })(),
   ObjectUtils: (function ObjectUtils() {
