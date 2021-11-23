@@ -66,63 +66,62 @@ const utils = {
         proto = Object.getPrototypeOf(obj);
       if (proto !== null)
         Object.setPrototypeOf(objClone, clone(proto));
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < length; i++)
         Object.defineProperty(objClone, objProps[i], Object.getOwnPropertyDescriptor(obj, objProps[i]));
-      }
       return objClone;
     }
 
     function getProperties(obj) {
       let properties = [];
-      for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
-        properties.push(
-          ...Object.getOwnPropertyNames(i).filter(v => !properties.includes(v)),
-          ...Object.getOwnPropertySymbols(i).filter(v => !properties.includes(v))
-        );
-      }
+      if (obj !== undefined)
+        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
+          properties.push(
+            ...Object.getOwnPropertyNames(i).filter(v => !properties.includes(v)),
+            ...Object.getOwnPropertySymbols(i).filter(v => !properties.includes(v))
+          );
       return properties;
     }
 
     function getPropertyDescriptor(obj, prop) {
-      for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
-        if (i.hasOwnProperty(prop))
-          return Object.getOwnPropertyDescriptor(i, prop);
-      }
+      if (obj !== undefined)
+        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
+          if (i.hasOwnProperty(prop))
+            return Object.getOwnPropertyDescriptor(i, prop);
     }
 
     function getPropertyNames(obj) {
       const names = [];
-      for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
-        names.push(...Object.getOwnPropertyNames(i).filter(v => !names.includes(v)));
-      }
+      if (obj !== undefined)
+        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
+          names.push(...Object.getOwnPropertyNames(i).filter(v => !names.includes(v)));
       return names;
     }
 
     function getPropertySymbols(obj) {
       const symbols = [];
-      for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
-        symbols.push(...Object.getOwnPropertySymbols(i).filter(v => !symbols.includes(v)));
-      }
+      if (obj !== undefined)
+        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
+          symbols.push(...Object.getOwnPropertySymbols(i).filter(v => !symbols.includes(v)));
       return symbols;
     }
 
     function getPrototypeChain(obj) {
       const chain = [];
-      for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
-        chain[chain.length] = i.hasOwnProperty('constructor')
-          ? i.constructor.name
-          : typeof i === 'function'
-            ? i.name
-            : undefined;
-      }
+      if (obj !== undefined)
+        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
+          chain[chain.length] = i.hasOwnProperty('constructor')
+            ? i.constructor.name
+            : typeof i === 'function'
+              ? i.name
+              : undefined;
       return chain;
     }
 
     function hasProperty(obj, prop) {
-      for (let i = obj; i !== undefined && i !== null; i = Object.getPrototypeOf(i)) {
-        if (i.hasOwnProperty(prop))
-          return true;
-      }
+      if (obj !== undefined)
+        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
+          if (i.hasOwnProperty(prop))
+            return true;
       return false;
     }
 
