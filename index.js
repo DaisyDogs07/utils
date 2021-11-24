@@ -33,11 +33,15 @@ const utils = {
   })(),
   MathUtils: (function MathUtils() {
     function clamp(value, min = 0, max = 1) {
-      return Math.min(Math.max(value, min), max);
+      if (value < min)
+        return min;
+      if (value > max)
+        return max;
+      return value;
     }
 
-    function lerp(a, b, t = 0) {
-      return a + (b - a) * clamp(t);
+    function lerp(min, max, t = 0) {
+      return clamp(t) * (max - min) + min;
     }
 
     function normalize(value, min = 0, max = 1) {
@@ -57,18 +61,8 @@ const utils = {
       return arr.join('.');
     }
 
-    function random(min = 0, max = min + 1) {
-      if (max <= min)
-        return min;
-      let origMin = min;
-      if (min < 0) {
-        max -= min;
-        min = 0;
-      }
-      let result = (Math.random() * (max - min)) + min;
-      return origMin < 0
-        ? result + origMin
-        : result;
+    function random(min = 0, max = 1) {
+      return Math.random() * (max - min) + min;
     }
 
     return {
