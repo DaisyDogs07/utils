@@ -36,7 +36,7 @@ const utils = {
       return Math.min(Math.max(value, min), max);
     }
 
-    function lerp(a, b, t = 1) {
+    function lerp(a, b, t = 0) {
       return a + (b - a) * clamp(t);
     }
 
