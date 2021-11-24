@@ -31,6 +31,25 @@ const utils = {
       uncurryThis: bind.bind(call)
     };
   })(),
+  MathUtils: (function MathUtils() {
+    function clamp(value, min = 0, max = 1) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function lerp(a, b, t = 1) {
+      return a + (b - a) * clamp(t);
+    }
+
+    function normalize(value, min = 0, max = 1) {
+      return (value - min) / (max - min);
+    }
+
+    return {
+      clamp,
+      lerp,
+      normalize
+    };
+  })(),
   NumberUtils: (function NumberUtils() {
     function numberWithCommas(num = 0) {
       const arr = num.toString().split('.');

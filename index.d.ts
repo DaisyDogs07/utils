@@ -8,6 +8,12 @@ declare module 'utils' {
     uncurryThis<T extends (...args: any[]) => void>(fn: T): (thisArg?: ThisType<T>, ...args: Parameters<T>) => ReturnType<T>;
   }
 
+  export const MathUtils: {
+    clamp(value: number, min?: number, max?: number): number;
+    lerp(a: number, b: number, t: number): number;
+    normalize(value: number, min?: number, max?: number): number;
+  }
+
   export const NumberUtils: {
     numberWithCommas(num?: number): string;
     random(min?: number, max?: number): number;
