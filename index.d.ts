@@ -12,8 +12,8 @@ declare module 'utils' {
     clamp(value: number, min?: number, max?: number): number;
 
     distance(a: number, b: number): number;
-    distance(x1: number, y1: number, x2: number, y2: number): number;
-    distance(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): number;
+    distance(x1: number, x2: number, y1: number, y2: number): number;
+    distance(x1: number, x2: number, y1: number, y2: number, z1: number, z2: number): number;
     distance(...pairs: number[]): number;
 
     lerp(min: number, max: number, t?: number): number;
