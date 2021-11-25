@@ -40,6 +40,13 @@ const utils = {
       return value;
     }
 
+    function distance() {
+      let res = 0;
+      for (let i = 1; i < arguments.length; i += 2)
+        res += (arguments[i] - arguments[i - 1]) ** 2;
+      return Math.sqrt(res);
+    }
+
     function lerp(min, max, t = 0) {
       return t * (max - min) + min;
     }
@@ -50,6 +57,7 @@ const utils = {
 
     return {
       clamp,
+      distance,
       lerp,
       normalize
     };
