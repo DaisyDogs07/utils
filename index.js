@@ -85,7 +85,7 @@ const utils = {
     }
 
     function getProperties(obj) {
-      let properties = [];
+      const properties = [];
       if (obj !== undefined)
         for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
           properties.push(
