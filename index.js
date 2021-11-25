@@ -41,7 +41,7 @@ const utils = {
     }
 
     function lerp(min, max, t = 0) {
-      return clamp(t) * (max - min) + min;
+      return t * (max - min) + min;
     }
 
     function normalize(value, min = 0, max = 1) {
