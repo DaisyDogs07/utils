@@ -10,7 +10,7 @@ declare module 'utils' {
 
   export const MathUtils: {
     clamp(value: number, min?: number, max?: number): number;
-    lerp(a: number, b: number, t?: number): number;
+    lerp(min: number, max: number, t?: number): number;
     normalize(value: number, min?: number, max?: number): number;
   }
 
