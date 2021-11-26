@@ -42,8 +42,15 @@ const utils = {
 
     function distance() {
       let res = 0;
+      if (arguments.length >= 2 &&
+          arguments[0] instanceof Array &&
+          arguments[1] instanceof Array) {
+        for (let i = 0; i < arguments[0].length && i < arguments[1].length; i++)
+          res += (arguments[0][i] - arguments[1][i]) ** 2;
+        return Math.sqrt(res);
+      }
       for (let i = 1; i < arguments.length; i += 2)
-        res += (arguments[i] - arguments[i - 1]) ** 2;
+        res += (arguments[i - 1] - arguments[i]) ** 2;
       return Math.sqrt(res);
     }
 
