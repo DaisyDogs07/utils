@@ -9,6 +9,8 @@ declare module 'utils' {
   }
 
   export const MathUtils: {
+    average(...numbers: number[]): number;
+    average(numbers: number[]): number;
     clamp(value: number, min?: number, max?: number): number;
 
     distance(x1: number, x2: number): number;

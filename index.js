@@ -32,6 +32,18 @@ const utils = {
     };
   })(),
   MathUtils: (function MathUtils() {
+    function average() {
+      let avg = 0;
+      if (arguments[0] instanceof Array) {
+        for (let i = 0; i < arguments[0].length; i++)
+          avg += arguments[0][i];
+        return avg / arguments[0].length;
+      }
+      for (let i = 0; i < arguments.length; i++)
+        avg += arguments[i];
+      return avg / arguments.length;
+    }
+
     function clamp(value, min = 0, max = 1) {
       if (value < min)
         return min;
@@ -41,17 +53,16 @@ const utils = {
     }
 
     function distance() {
-      let res = 0;
-      if (arguments.length >= 2 &&
-          arguments[0] instanceof Array &&
+      let dist = 0;
+      if (arguments[0] instanceof Array &&
           arguments[1] instanceof Array) {
         for (let i = 0; i < arguments[0].length && i < arguments[1].length; i++)
-          res += (arguments[0][i] - arguments[1][i]) ** 2;
-        return Math.sqrt(res);
+          dist += (arguments[0][i] - arguments[1][i]) ** 2;
+        return Math.sqrt(dist);
       }
       for (let i = 1; i < arguments.length; i += 2)
-        res += (arguments[i - 1] - arguments[i]) ** 2;
-      return Math.sqrt(res);
+        dist += (arguments[i - 1] - arguments[i]) ** 2;
+      return Math.sqrt(dist);
     }
 
     function lerp(min, max, t = 0) {
@@ -63,6 +74,7 @@ const utils = {
     }
 
     return {
+      average,
       clamp,
       distance,
       lerp,
