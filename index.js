@@ -34,7 +34,7 @@ const utils = {
   MathUtils: (function MathUtils() {
     function average() {
       let avg = 0;
-      if (arguments[0] instanceof Array) {
+      if (Array.isArray(arguments[0])) {
         for (let i = 0; i < arguments[0].length; i++)
           avg += arguments[0][i];
         return avg / arguments[0].length;
@@ -54,8 +54,8 @@ const utils = {
 
     function distance() {
       let dist = 0;
-      if (arguments[0] instanceof Array &&
-          arguments[1] instanceof Array) {
+      if (Array.isArray(arguments[0]) &&
+          Array.isArray(arguments[1])) {
         for (let i = 0; i < arguments[0].length && i < arguments[1].length; i++)
           dist += (arguments[0][i] - arguments[1][i]) ** 2;
         return Math.sqrt(dist);
