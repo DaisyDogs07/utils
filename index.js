@@ -58,11 +58,11 @@ const utils = {
           Array.isArray(arguments[1])) {
         for (let i = 0; i < arguments[0].length && i < arguments[1].length; i++)
           dist += (arguments[0][i] - arguments[1][i]) ** 2;
-        return Math.sqrt(dist);
+        return dist ** 0.5;
       }
       for (let i = 1; i < arguments.length; i += 2)
         dist += (arguments[i - 1] - arguments[i]) ** 2;
-      return Math.sqrt(dist);
+      return dist ** 0.5;
     }
 
     function lerp(min, max, t = 0) {
