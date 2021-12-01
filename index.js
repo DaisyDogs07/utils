@@ -35,12 +35,12 @@ const utils = {
     function average() {
       let avg = 0;
       if (Array.isArray(arguments[0])) {
-        for (let i = 0; i < arguments[0].length; i++)
-          avg += arguments[0][i];
+        for (const n of arguments[0])
+          avg += +n;
         return avg / arguments[0].length;
       }
-      for (let i = 0; i < arguments.length; i++)
-        avg += arguments[i];
+      for (const n of arguments)
+        avg += +n;
       return avg / arguments.length;
     }
 
@@ -57,11 +57,11 @@ const utils = {
       if (Array.isArray(arguments[0]) &&
           Array.isArray(arguments[1])) {
         for (let i = 0; i < arguments[0].length && i < arguments[1].length; i++)
-          dist += (arguments[0][i] - arguments[1][i]) ** 2;
+          dist += (+arguments[0][i] - +arguments[1][i]) ** 2;
         return dist ** 0.5;
       }
       for (let i = 1; i < arguments.length; i += 2)
-        dist += (arguments[i - 1] - arguments[i]) ** 2;
+        dist += (+arguments[i - 1] - +arguments[i]) ** 2;
       return dist ** 0.5;
     }
 
@@ -92,9 +92,17 @@ const utils = {
       return Math.random() * (max - min) + min;
     }
 
+    function realNumber(num = 0) {
+      const arr = num.toString().split('.');
+      if (num > +arr[0])
+        arr[1] = (num - +arr[0]).toString().split('.')[1];
+      return arr.join('.');
+    }
+
     return {
       numberWithCommas,
-      random
+      random,
+      realNumber
     };
   })(),
   ObjectUtils: (function ObjectUtils() {
