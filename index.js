@@ -94,7 +94,7 @@ const utils = {
 
     function realNumber(num = 0) {
       let isNeg = false;
-      if (num < 0) {
+      if (num < 0 || 1/num === -Infinity) {
         isNeg = true;
         num = -num;
       }
