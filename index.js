@@ -92,10 +92,18 @@ const utils = {
       return Math.random() * (max - min) + min;
     }
 
+    const maxFractionDigits = (() => {
+      try {
+        (0).toFixed(100);
+        return 100;
+      } catch (e) {
+        return 20;
+      }
+    })();
     function realNumber(num = 0) {
       if (1/num === -Infinity)
         return '-0';
-      return num.toFixed(100).replace(/(\.?)0+$/, '');
+      return num.toFixed(maxFractionDigits).replace(/(\.?)0+$/, '');
     }
 
     return {
