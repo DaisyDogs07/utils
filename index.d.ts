@@ -31,8 +31,11 @@ declare module 'utils' {
 
   export const ObjectUtils: {
     clone<T>(obj: T): T;
-    getProperties(obj: any): PropertyKey[];
+    getProperties(obj: any): (string | symbol)[];
     getPropertyDescriptor(obj: any, prop: PropertyKey): PropertyDescriptor;
+    getPropertyDescriptors(obj: any): {
+      [x: string]: PropertyDescriptor;
+    };
     getPropertyNames(obj: any): string[];
     getPropertySymbols(obj: any): symbol[];
     getPrototypeChain(obj: any): string[];

@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "types": "index.d.ts",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": ">=7.0.0"
+  }
 }

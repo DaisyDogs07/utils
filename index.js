@@ -106,68 +106,87 @@ const utils = {
     };
   })(),
   ObjectUtils: (function ObjectUtils() {
-    // This function works best with plain objects
     function clone(obj) {
-      const objClone = {},
-        objProps = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)],
+      const objClone = Object.create(null),
         proto = Object.getPrototypeOf(obj);
       if (proto !== null)
         Object.setPrototypeOf(objClone, clone(proto));
-      for (let i = 0; i < objProps.length; i++)
-        Object.defineProperty(objClone, objProps[i], Object.getOwnPropertyDescriptor(obj, objProps[i]));
-      return objClone;
+      return Object.assign(objClone, obj);
     }
 
     function getProperties(obj) {
       const properties = [];
       if (obj !== void 0)
-        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
           properties.push(
-            ...Object.getOwnPropertyNames(i).filter(v => !properties.includes(v)),
-            ...Object.getOwnPropertySymbols(i).filter(v => !properties.includes(v))
+            ...Object.getOwnPropertyNames(obj).filter(v => !properties.includes(v)),
+            ...Object.getOwnPropertySymbols(obj).filter(v => !properties.includes(v))
           );
       return properties;
     }
 
+    let hasOwn;
+    if (!('hasOwn' in Object)) {
+      const {
+        bind,
+        call
+      } = Function.prototype,
+        uncurryThis = bind.bind(call);
+      hasOwn = uncurryThis(Object.prototype.hasOwnProperty);
+    } else hasOwn = Object.hasOwn;
+
     function getPropertyDescriptor(obj, prop) {
       if (obj !== void 0)
-        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
-          if (i.hasOwnProperty(prop))
-            return Object.getOwnPropertyDescriptor(i, prop);
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
+          if (hasOwn(obj, prop))
+            return Object.getOwnPropertyDescriptor(obj, prop);
+    }
+
+    function getPropertyDescriptors(obj, prop) {
+      const descs = {};
+      if (obj !== void 0)
+        for (; obj !== null; obj = Object.getPrototypeOf(obj)) {
+          const ownDescs = Object.getOwnPropertyDescriptors(obj);
+          for (const key in ownDescs)
+            if (hasOwn(descs, key))
+              delete ownDescs[key];
+          Object.assign(descs, ownDescs);
+        }
+      return descs;
     }
 
     function getPropertyNames(obj) {
       const names = [];
       if (obj !== void 0)
-        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
-          names.push(...Object.getOwnPropertyNames(i).filter(v => !names.includes(v)));
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
+          names.push(...Object.getOwnPropertyNames(obj).filter(v => !names.includes(v)));
       return names;
     }
 
     function getPropertySymbols(obj) {
       const symbols = [];
       if (obj !== void 0)
-        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
-          symbols.push(...Object.getOwnPropertySymbols(i).filter(v => !symbols.includes(v)));
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
+          symbols.push(...Object.getOwnPropertySymbols(obj).filter(v => !symbols.includes(v)));
       return symbols;
     }
 
     function getPrototypeChain(obj) {
       const chain = [];
       if (obj !== void 0)
-        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
-          chain.push(i.hasOwnProperty('constructor')
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
+          chain.push(hasOwn(obj, 'constructor')
             ? i.constructor.name
-            : typeof i === 'function'
-              ? i.name
+            : typeof obj === 'function'
+              ? obj.name
               : void 0);
       return chain;
     }
 
     function hasProperty(obj, prop) {
       if (obj !== void 0)
-        for (let i = obj; i !== null; i = Object.getPrototypeOf(i))
-          if (i.hasOwnProperty(prop))
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
+          if (hasOwn(obj, prop))
             return true;
       return false;
     }
@@ -176,6 +195,7 @@ const utils = {
       clone,
       getProperties,
       getPropertyDescriptor,
+      getPropertyDescriptors,
       getPropertyNames,
       getPropertySymbols,
       getPrototypeChain,
