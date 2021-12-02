@@ -93,9 +93,16 @@ const utils = {
     }
 
     function realNumber(num = 0) {
+      let isNeg = false;
+      if (num < 0) {
+        isNeg = true;
+        num = -num;
+      }
       const arr = num.toString().split('.');
       if (num > +arr[0])
         arr[1] = (num - +arr[0]).toString().split('.')[1];
+      if (isNeg)
+        return '-' + arr.join('.');
       return arr.join('.');
     }
 
