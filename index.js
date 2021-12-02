@@ -125,16 +125,6 @@ const utils = {
       return properties;
     }
 
-    let hasOwn;
-    if (!('hasOwn' in Object)) {
-      const {
-        bind,
-        call
-      } = Function.prototype,
-        uncurryThis = bind.bind(call);
-      hasOwn = uncurryThis(Object.prototype.hasOwnProperty);
-    } else hasOwn = Object.hasOwn;
-
     function getPropertyDescriptor(obj, prop) {
       if (obj !== void 0)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
@@ -183,6 +173,16 @@ const utils = {
       return chain;
     }
 
+    let hasOwn;
+    if (!('hasOwn' in Object)) {
+      const {
+        bind,
+        call
+      } = Function.prototype,
+        uncurryThis = bind.bind(call);
+      hasOwn = uncurryThis(Object.prototype.hasOwnProperty);
+    } else hasOwn = Object.hasOwn;
+
     function hasProperty(obj, prop) {
       if (obj !== void 0)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
@@ -199,6 +199,7 @@ const utils = {
       getPropertyNames,
       getPropertySymbols,
       getPrototypeChain,
+      hasOwn,
       hasProperty
     };
   })(),

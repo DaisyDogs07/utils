@@ -39,6 +39,7 @@ declare module 'utils' {
     getPropertyNames(obj: any): string[];
     getPropertySymbols(obj: any): symbol[];
     getPrototypeChain(obj: any): string[];
+    hasOwn(obj: any, prop: PropertyKey): boolean;
     hasProperty(obj: any, prop: PropertyKey): boolean;
   }
 
