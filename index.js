@@ -93,12 +93,9 @@ const utils = {
     }
 
     function realNumber(num = 0) {
-      const arr = num.toString().split('.');
       if (1/num === -Infinity)
         return '-0';
-      if (num !== +arr[0])
-        arr[1] = (num - +arr[0]).toString().split('.')[1];
-      return arr.join('.');
+      return num.toFixed(100).replace(/(\.?)0+$/, '');
     }
 
     return {
