@@ -24,6 +24,7 @@ declare module 'utils' {
   }
 
   export const NumberUtils: {
+    kMaxFractionDigits: number;
     numberWithCommas(num?: number): string;
     random(min?: number, max?: number): number;
     realNumber(num?: number): string;

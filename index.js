@@ -82,6 +82,14 @@ const utils = {
     };
   })(),
   NumberUtils: (function NumberUtils() {
+    let kMaxFractionDigits;
+    try {
+      (0).toFixed(100);
+      kMaxFractionDigits = 100;
+    } catch (e) {
+      kMaxFractionDigits = 20;
+    }
+
     function numberWithCommas(num = 0) {
       const arr = num.toString().split('.');
       arr[0] = arr[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -92,21 +100,14 @@ const utils = {
       return Math.random() * (max - min) + min;
     }
 
-    const maxFractionDigits = (() => {
-      try {
-        (0).toFixed(100);
-        return 100;
-      } catch (e) {
-        return 20;
-      }
-    })();
     function realNumber(num = 0) {
       if (1/num === -Infinity)
         return '-0';
-      return num.toFixed(maxFractionDigits).replace(/(\.?)0+$/, '');
+      return num.toFixed(kMaxFractionDigits).replace(/\.?0+$/, '');
     }
 
     return {
+      kMaxFractionDigits,
       numberWithCommas,
       random,
       realNumber
