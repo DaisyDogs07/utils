@@ -69,6 +69,14 @@ const utils = {
       return t * (max - min) + min;
     }
 
+    function lexicographicCompare(a, b) {
+      if (a < b)
+        return -1;
+      if (a > b)
+        return 1;
+      return 0;
+    }
+
     function normalize(value, min = 0, max = 1) {
       return (value - min) / (max - min);
     }
@@ -78,6 +86,7 @@ const utils = {
       clamp,
       distance,
       lerp,
+      lexicographicCompare,
       normalize
     };
   })(),

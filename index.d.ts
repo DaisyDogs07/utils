@@ -20,6 +20,7 @@ declare module 'utils' {
     distance(...pairs: number[]): number;
 
     lerp(min: number, max: number, t?: number): number;
+    lexicographicCompare(a: number, b: number): number;
     normalize(value: number, min?: number, max?: number): number;
   }
 
