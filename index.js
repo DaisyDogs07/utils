@@ -123,7 +123,7 @@ const utils = {
 
     function getProperties(obj) {
       const properties = [];
-      if (obj !== void 0)
+      if (obj !== void 0 && obj !== null)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
           properties.push(
             ...Object.getOwnPropertyNames(obj).filter(v => !properties.includes(v)),
@@ -133,7 +133,7 @@ const utils = {
     }
 
     function getPropertyDescriptor(obj, prop) {
-      if (obj !== void 0)
+      if (obj !== void 0 && obj !== null)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
           if (prop in obj)
             return Object.getOwnPropertyDescriptor(obj, prop);
@@ -141,7 +141,7 @@ const utils = {
 
     function getPropertyDescriptors(obj, prop) {
       const descs = {};
-      if (obj !== void 0)
+      if (obj !== void 0 && obj !== null)
         for (; obj !== null; obj = Object.getPrototypeOf(obj)) {
           const ownDescs = Object.getOwnPropertyDescriptors(obj);
           for (const key in ownDescs)
@@ -154,7 +154,7 @@ const utils = {
 
     function getPropertyNames(obj) {
       const names = [];
-      if (obj !== void 0)
+      if (obj !== void 0 && obj !== null)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
           names.push(...Object.getOwnPropertyNames(obj).filter(v => !names.includes(v)));
       return names;
@@ -162,15 +162,15 @@ const utils = {
 
     function getPropertySymbols(obj) {
       const symbols = [];
-      if (obj !== void 0)
+      if (obj !== void 0 && obj !== null)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
           symbols.push(...Object.getOwnPropertySymbols(obj).filter(v => !symbols.includes(v)));
       return symbols;
     }
 
     function getPrototypeChain(obj) {
-      const chain = [obj];
-      if (obj !== void 0)
+      const chain = [];
+      if (obj !== void 0 && obj !== null)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
           chain.push(obj);
       return chain;
@@ -187,7 +187,7 @@ const utils = {
     } else hasOwn = Object.hasOwn;
 
     function hasProperty(obj, prop) {
-      if (obj !== void 0)
+      if (obj !== void 0 && obj !== null)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
           if (prop in obj)
             return true;
