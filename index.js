@@ -181,7 +181,7 @@ const utils = {
     function getPrototypeChain(obj) {
       const chain = [];
       if (obj !== void 0 && obj !== null)
-        for (; obj !== null; obj = ObjectGetPrototypeOf(obj))
+        for (obj = ObjectGetPrototypeOf(obj); obj !== null; obj = ObjectGetPrototypeOf(obj))
           chain.push(obj);
       return chain;
     }
