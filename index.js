@@ -115,11 +115,10 @@ const utils = {
   })(),
   ObjectUtils: (function ObjectUtils() {
     function clone(obj) {
-      const objClone = Object.create(null),
-        proto = Object.getPrototypeOf(obj);
-      if (proto !== null)
-        Object.setPrototypeOf(objClone, clone(proto));
-      return Object.assign(objClone, obj);
+      return Object.create(
+        Object.getPrototypeOf(obj),
+        Object.getOwnPropertyDescriptors(obj)
+      );
     }
 
     function getProperties(obj) {
@@ -136,7 +135,7 @@ const utils = {
     function getPropertyDescriptor(obj, prop) {
       if (obj !== void 0)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
-          if (hasOwn(obj, prop))
+          if (prop in obj)
             return Object.getOwnPropertyDescriptor(obj, prop);
     }
 
@@ -146,7 +145,7 @@ const utils = {
         for (; obj !== null; obj = Object.getPrototypeOf(obj)) {
           const ownDescs = Object.getOwnPropertyDescriptors(obj);
           for (const key in ownDescs)
-            if (hasOwn(descs, key))
+            if (key in descs)
               delete ownDescs[key];
           Object.assign(descs, ownDescs);
         }
@@ -170,14 +169,10 @@ const utils = {
     }
 
     function getPrototypeChain(obj) {
-      const chain = [];
+      const chain = [obj];
       if (obj !== void 0)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
-          chain.push(hasOwn(obj, 'constructor')
-            ? i.constructor.name
-            : typeof obj === 'function'
-              ? obj.name
-              : void 0);
+          chain.push(obj);
       return chain;
     }
 
@@ -194,7 +189,7 @@ const utils = {
     function hasProperty(obj, prop) {
       if (obj !== void 0)
         for (; obj !== null; obj = Object.getPrototypeOf(obj))
-          if (hasOwn(obj, prop))
+          if (prop in obj)
             return true;
       return false;
     }
