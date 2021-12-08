@@ -4,8 +4,8 @@ declare module 'utils' {
   }
 
   export const FunctionUtils: {
-    applyBind<T extends (...args: any[]) => void>(fn: T): (thisArg?: ThisType<T>, argsArray?: Parameters<T>) => ReturnType<T>;
-    uncurryThis<T extends (...args: any[]) => void>(fn: T): (thisArg?: ThisType<T>, ...args: Parameters<T>) => ReturnType<T>;
+    applyBind<T extends (...args: any[]) => void>(fn: T): (thisArg?: ThisType<any>, argsArray?: Parameters<T>) => ReturnType<T>;
+    uncurryThis<T extends (...args: any[]) => void>(fn: T): (thisArg?: ThisType<any>, ...args: Parameters<T>) => ReturnType<T>;
   }
 
   export const MathUtils: {
