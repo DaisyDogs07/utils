@@ -123,7 +123,9 @@ const utils = {
       ObjectGetOwnPropertyDescriptors = Object.getOwnPropertyDescriptors,
       ObjectGetOwnPropertyNames = Object.getOwnPropertyNames,
       ObjectGetOwnPropertySymbols = Object.getOwnPropertySymbols,
-      ObjectGetPrototypeOf = Object.getPrototypeOf;
+      ObjectGetPrototypeOf = Object.getPrototypeOf,
+      ReflectOwnKeys = Reflect.ownKeys;
+
     function clone(obj) {
       return ObjectCreate(
         ObjectGetPrototypeOf(obj),
@@ -136,8 +138,7 @@ const utils = {
       if (obj !== void 0 && obj !== null)
         for (; obj !== null; obj = ObjectGetPrototypeOf(obj))
           properties.push(
-            ...ObjectGetOwnPropertyNames(obj).filter(v => !properties.includes(v)),
-            ...ObjectGetOwnPropertySymbols(obj).filter(v => !properties.includes(v))
+            ...ReflectOwnKeys(obj).filter(v => !properties.includes(v))
           );
       return properties;
     }
