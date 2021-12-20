@@ -32,10 +32,9 @@ const utils = {
     };
   })(),
   MathUtils: (function MathUtils() {
-    const ArrayIsArray = Array.isArray;
     function average() {
       let avg = 0;
-      if (ArrayIsArray(arguments[0])) {
+      if (Array.isArray(arguments[0])) {
         for (const n of arguments[0])
           avg += +n;
         return avg / arguments[0].length;
@@ -55,8 +54,8 @@ const utils = {
 
     function distance() {
       let dist = 0;
-      if (ArrayIsArray(arguments[0]) &&
-          ArrayIsArray(arguments[1])) {
+      if (Array.isArray(arguments[0]) &&
+          Array.isArray(arguments[1])) {
         for (let i = 0; i < arguments[0].length && i < arguments[1].length; i++)
           dist += (+arguments[0][i] - +arguments[1][i]) ** 2;
         return dist ** 0.5;
@@ -90,8 +89,6 @@ const utils = {
     } catch (e) {
       kMaxFractionDigits = 20;
     }
-    const MathRandom = Math.random,
-      ObjectIs = Object.is;
 
     function numberWithCommas(num = 0) {
       const arr = num.toString().split('.');
@@ -100,11 +97,11 @@ const utils = {
     }
 
     function random(min = 0, max = 1) {
-      return MathRandom() * (max - min) + min;
+      return Math.random() * (max - min) + min;
     }
 
     function realNumber(num = 0) {
-      if (ObjectIs(num, -0))
+      if (Object.is(num, -0))
         return '-0';
       return num.toFixed(kMaxFractionDigits).replace(/\.?0+$/, '');
     }
@@ -117,48 +114,39 @@ const utils = {
     };
   })(),
   ObjectUtils: (function ObjectUtils() {
-    const ObjectAssign = Object.assign,
-      ObjectCreate = Object.create,
-      ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
-      ObjectGetOwnPropertyDescriptors = Object.getOwnPropertyDescriptors,
-      ObjectGetOwnPropertyNames = Object.getOwnPropertyNames,
-      ObjectGetOwnPropertySymbols = Object.getOwnPropertySymbols,
-      ObjectGetPrototypeOf = Object.getPrototypeOf,
-      ReflectOwnKeys = Reflect.ownKeys;
-
     function clone(obj) {
-      return ObjectCreate(
-        ObjectGetPrototypeOf(obj),
-        ObjectGetOwnPropertyDescriptors(obj)
+      return Object.create(
+        Object.getPrototypeOf(obj),
+        Object.getOwnPropertyDescriptors(obj)
       );
     }
 
     function getProperties(obj) {
       const properties = [];
       if (obj !== void 0 && obj !== null)
-        for (; obj !== null; obj = ObjectGetPrototypeOf(obj))
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
           properties.push(
-            ...ReflectOwnKeys(obj).filter(v => !properties.includes(v))
+            ...Reflect.ownKeys(obj).filter(v => !properties.includes(v))
           );
       return properties;
     }
 
     function getPropertyDescriptor(obj, prop) {
       if (obj !== void 0 && obj !== null)
-        for (; obj !== null; obj = ObjectGetPrototypeOf(obj))
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
           if (prop in obj)
-            return ObjectGetOwnPropertyDescriptor(obj, prop);
+            return Object.getOwnPropertyDescriptor(obj, prop);
     }
 
     function getPropertyDescriptors(obj, prop) {
       const descs = {};
       if (obj !== void 0 && obj !== null)
-        for (; obj !== null; obj = ObjectGetPrototypeOf(obj)) {
-          const ownDescs = ObjectGetOwnPropertyDescriptors(obj);
+        for (; obj !== null; obj = Object.getPrototypeOf(obj)) {
+          const ownDescs = Object.getOwnPropertyDescriptors(obj);
           for (const key in ownDescs)
             if (key in descs)
               delete ownDescs[key];
-          ObjectAssign(descs, ownDescs);
+          Object.assign(descs, ownDescs);
         }
       return descs;
     }
@@ -166,23 +154,23 @@ const utils = {
     function getPropertyNames(obj) {
       const names = [];
       if (obj !== void 0 && obj !== null)
-        for (; obj !== null; obj = ObjectGetPrototypeOf(obj))
-          names.push(...ObjectGetOwnPropertyNames(obj).filter(v => !names.includes(v)));
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
+          names.push(...Object.getOwnPropertyNames(obj).filter(v => !names.includes(v)));
       return names;
     }
 
     function getPropertySymbols(obj) {
       const symbols = [];
       if (obj !== void 0 && obj !== null)
-        for (; obj !== null; obj = ObjectGetPrototypeOf(obj))
-          symbols.push(...ObjectGetOwnPropertySymbols(obj).filter(v => !symbols.includes(v)));
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
+          symbols.push(...Object.getOwnPropertySymbols(obj).filter(v => !symbols.includes(v)));
       return symbols;
     }
 
     function getPrototypeChain(obj) {
       const chain = [];
       if (obj !== void 0 && obj !== null)
-        for (obj = ObjectGetPrototypeOf(obj); obj !== null; obj = ObjectGetPrototypeOf(obj))
+        for (obj = Object.getPrototypeOf(obj); obj !== null; obj = Object.getPrototypeOf(obj))
           chain.push(obj);
       return chain;
     }
@@ -199,7 +187,7 @@ const utils = {
 
     function hasProperty(obj, prop) {
       if (obj !== void 0 && obj !== null)
-        for (; obj !== null; obj = ObjectGetPrototypeOf(obj))
+        for (; obj !== null; obj = Object.getPrototypeOf(obj))
           if (prop in obj)
             return true;
       return false;
