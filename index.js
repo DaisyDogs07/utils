@@ -43,6 +43,8 @@ const utils = {
   },
   ObjectUtils: {
     clone(obj) {
+      if (typeof obj.clone === 'function')
+        return obj.clone();
       return Object.create(
         Object.getPrototypeOf(obj),
         Object.getOwnPropertyDescriptors(obj)
