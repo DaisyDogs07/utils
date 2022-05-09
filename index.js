@@ -31,6 +31,12 @@ const utils = {
         dist += (+arguments[i] - +arguments[++i]) ** 2;
       return dist ** 0.5;
     },
+    middlePoint() {
+      let mid = [];
+      for (let i = 0; i < arguments.length; ++i)
+        mid[mid.length] = (+arguments[i] + +arguments[++i]) / 2;
+      return mid;
+    },
     lerp(min, max, t = 0) {
       return t * (max - min) + min;
     },
@@ -43,8 +49,6 @@ const utils = {
   },
   ObjectUtils: {
     clone(obj) {
-      if (typeof obj.clone === 'function')
-        return obj.clone();
       return Object.create(
         Object.getPrototypeOf(obj),
         Object.getOwnPropertyDescriptors(obj)
