@@ -27,17 +27,17 @@ const utils = {
     },
     distance() {
       let dist = 0;
-      for (let i = 0; i < arguments.length; ++i)
-        dist += (+arguments[i] - +arguments[++i]) ** 2;
+      for (let i = 0; i !== arguments.length;)
+        dist += (+arguments[i++] - +arguments[i++]) ** 2;
       return dist ** 0.5;
     },
     middlePoint() {
-      let mid = [];
-      for (let i = 0; i < arguments.length; ++i)
-        mid[mid.length] = (+arguments[i] + +arguments[++i]) / 2;
+      const mid = [];
+      for (let i = 0; i !== arguments.length;)
+        mid[mid.length] = (+arguments[i++] + +arguments[i++]) / 2;
       return mid;
     },
-    lerp(min, max, t = 0) {
+    lerp(min, max, t) {
       return t * (max - min) + min;
     },
     normalize(value, min, max) {
