@@ -12,6 +12,8 @@ declare module 'utils' {
     distance(x2: number, x1: number, y2: number, y1: number): number;
     distance(x2: number, x1: number, y2: number, y1: number, z2: number, z1: number): number;
 
+    factorial(x: number): number;
+
     middlePoint(x1: number, x2: number): number[];
     middlePoint(x1: number, x2: number, y1: number, y2: number): number[];
     middlePoint(x1: number, x2: number, y1: number, y2: number, z1: number, z2: number): number[];

@@ -31,6 +31,12 @@ const utils = {
         dist += (+arguments[i++] - +arguments[i++]) ** 2;
       return dist ** 0.5;
     },
+    factorial(x) {
+      let n = x;
+      while (--n)
+        x *= n;
+      return x;
+    },
     middlePoint() {
       const mid = [];
       for (let i = 0; i !== arguments.length;)
