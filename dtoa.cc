@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
@@ -17,7 +16,7 @@ char* dtoa(double d) {
     d = -d;
   double d1 = toF64(toU64(d) - 1);
   double d2 = toF64(toU64(d) + 1);
-  char* result = (char*)malloc(1);
+  char* result = new char;
   size_t resultLen = 0;
   result[0] = '\0';
   if (d == 0.0) {
@@ -69,10 +68,10 @@ char* dtoa(double d) {
         result = (char*)realloc(result, decLen + 2 + expLen + 1);
         resultLen = decLen + 2 + expLen;
         memcpy(result, decStr, decLen);
-        free((void*)decStr);
+        delete decStr;
         memcpy(result + decLen, "e-", 2);
         memcpy(result + decLen + 2, expStr, expLen);
-        free((void*)expStr);
+        delete expStr;
         result[decLen + 2 + expLen] = '\0';
         break;
       }
@@ -99,10 +98,10 @@ char* dtoa(double d) {
         result = (char*)realloc(result, decLen + 2 + expLen + 1);
         resultLen = decLen + 2 + expLen;
         memcpy(result, decStr, decLen);
-        free((void*)decStr);
+        delete decStr;
         memcpy(result + decLen, "e+", 2);
         memcpy(result + decLen + 2, expStr, expLen);
-        free((void*)expStr);
+        delete expStr;
         result[decLen + 2 + expLen] = '\0';
         break;
       }
