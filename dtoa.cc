@@ -185,14 +185,7 @@ char* dtoa(double d) {
       }
       break;
     }
-    d -= digit / exp;
-    d1 -= digit1 / exp;
-    d2 -= digit2 / exp;
     exp *= 10.0;
-    if (d1 == d)
-      d1 = toF64(toU64(d1) - 1);
-    if (d2 == d)
-      d2 = toF64(toU64(d2) + 1);
   }
   if (strchr(result, '.') != NULL)
     while (result[resultLen - 1] == '0')
