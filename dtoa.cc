@@ -116,9 +116,7 @@ char* dtoa(double d) {
     return result;
   }
   double intd = floor(d);
-  double intd1 = floor(d1);
-  double intd2 = floor(d2);
-  d -= floor(d);
+  d -= intd;
   d1 -= floor(d1);
   d2 -= floor(d2);
   if (intd == 0.0) {
@@ -127,17 +125,14 @@ char* dtoa(double d) {
     result[resultLen++] = '.';
     result[resultLen] = '\0';
   } else {
-    while (intd != 0.0) {
-      double digit = fmod(intd, 10.0);
-      double digit1 = fmod(intd1, 10.0);
-      double digit2 = fmod(intd2, 10.0);
+    double exp = 1.0;
+    while (intd >= exp) {
+      double digit = floor(fmod(intd / exp, 10.0));
       result = (char*)realloc(result, ++resultLen + 1);
       memmove(result + 1, result, resultLen);
-      result[0] = '0' + (int)digit;
+      result[0] = '0' + (char)digit;
       result[resultLen] = '\0';
-      intd = (intd - digit) / 10.0;
-      intd1 = (intd1 - digit1) / 10.0;
-      intd2 = (intd2 - digit2) / 10.0;
+      exp *= 10.0;
     }
     if (d != 0.0) {
       result = (char*)realloc(result, ++resultLen + 1);
@@ -152,7 +147,7 @@ char* dtoa(double d) {
     double digit1 = floor(fmod(d1 * exp, 10.0));
     double digit2 = floor(fmod(d2 * exp, 10.0));
     result = (char*)realloc(result, ++resultLen + 1);
-    result[resultLen - 1] = '0' + (int)digit;
+    result[resultLen - 1] = '0' + (char)digit;
     result[resultLen] = '\0';
     if (digit != digit1)
       diff |= 0b10;
@@ -162,16 +157,25 @@ char* dtoa(double d) {
       exp *= 10.0;
       digit = floor(fmod(d * exp, 10.0));
       if (digit >= 5.0) {
+        bool afterDot = false;
         for (int i = resultLen - 1; i >= 0; --i) {
-          if (result[i] == '.')
+          if (result[i] == '.') {
+            afterDot = true;
             continue;
+          }
           if (result[i] == '9') {
-            result[i] = '0';
-            if (i == 0) {
-              result = (char*)realloc(result, resultLen + 1);
-              memmove(result + 1, result, resultLen);
-              result[0] = '1';
-              ++resultLen;
+            if (afterDot) {
+              result[i] = '0';
+              if (i == 0) {
+                result = (char*)realloc(result, resultLen + 2);
+                memmove(result + 1, result, resultLen);
+                result[0] = '1';
+                result[resultLen + 1] = '\0';
+                ++resultLen;
+              }
+            } else {
+              result = (char*)realloc(result, resultLen);
+              result[--resultLen] = '\0';
             }
           } else {
             ++result[i];
@@ -198,6 +202,6 @@ char* dtoa(double d) {
     memmove(result + 1, result, resultLen);
     result[0] = '-';
     result[resultLen + 1] = '\0';
-  } else result = (char*)realloc(result, resultLen + 1);
+  }
   return result;
 }
