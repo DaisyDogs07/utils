@@ -142,13 +142,21 @@ char* dtoa(double d) {
   }
   int diff = 0b00;
   double exp = 10.0;
+  int zeros = 0;
   while (d > 0.0) {
     double digit = floor(fmod(d * exp, 10.0));
     double digit1 = floor(fmod(d1 * exp, 10.0));
     double digit2 = floor(fmod(d2 * exp, 10.0));
-    result = (char*)realloc(result, ++resultLen + 1);
-    result[resultLen - 1] = '0' + (char)digit;
-    result[resultLen] = '\0';
+    if (digit == 0.0)
+      ++zeros;
+    else {
+      result = (char*)realloc(result, resultLen + zeros + 2);
+      memset(result + resultLen, '0', zeros);
+      resultLen += zeros;
+      result[resultLen++] = '0' + (char)digit;
+      result[resultLen] = '\0';
+      zeros = 0;
+    }
     if (digit != digit1)
       diff |= 0b10;
     if (digit != digit2)
@@ -157,6 +165,14 @@ char* dtoa(double d) {
       exp *= 10.0;
       digit = floor(fmod(d * exp, 10.0));
       if (digit >= 5.0) {
+        if (zeros--) {
+          result = (char*)realloc(result, resultLen + zeros + 2);
+          memset(result + resultLen, '0', zeros);
+          resultLen += zeros;
+          result[resultLen++] = '1';
+          result[resultLen] = '\0';
+          break;
+        }
         bool afterDot = false;
         for (int i = resultLen - 1; i >= 0; --i) {
           if (result[i] == '.') {
@@ -185,11 +201,11 @@ char* dtoa(double d) {
       }
       break;
     }
+    d -= digit / exp;
+    d1 -= digit1 / exp;
+    d2 -= digit2 / exp;
     exp *= 10.0;
   }
-  if (strchr(result, '.') != NULL)
-    while (result[resultLen - 1] == '0')
-      result[--resultLen] = '\0';
   if (neg) {
     result = (char*)realloc(result, resultLen + 2);
     memmove(result + 1, result, resultLen);
