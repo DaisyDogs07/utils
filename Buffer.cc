@@ -5,7 +5,7 @@
 Buffer::Buffer(size_t size) {
   size_ = size;
   if (size != 0)
-    buf_ = (char*)malloc(size);
+    Resize(size);
 }
 void Buffer::Read(char* buf, size_t len, size_t off) {
   size_t zeros = 0;
