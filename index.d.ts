@@ -14,9 +14,9 @@ declare module 'utils' {
 
     factorial(x: number): number;
 
-    middlePoint(x1: number, x2: number): number[];
-    middlePoint(x1: number, x2: number, y1: number, y2: number): number[];
-    middlePoint(x1: number, x2: number, y1: number, y2: number, z1: number, z2: number): number[];
+    midPoint(x1: number, x2: number): number[];
+    midPoint(x1: number, x2: number, y1: number, y2: number): number[];
+    midPoint(x1: number, x2: number, y1: number, y2: number, z1: number, z2: number): number[];
 
     lerp(min: number, max: number, t: number): number;
     normalize(value: number, min: number, max: number): number;

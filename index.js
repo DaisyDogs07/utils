@@ -40,7 +40,7 @@ const utils = {
         x *= n;
       return x || 1;
     },
-    middlePoint() {
+    midPoint() {
       const mid = [];
       for (let i = 0; i !== arguments.length;)
         mid[mid.length] = (+arguments[i++] + +arguments[i++]) / 2;
