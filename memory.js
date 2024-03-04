@@ -1,7 +1,7 @@
 /**
  * @type {ArrayBuffer[]}
  */
-let pages = [new ArrayBuffer(65536)];
+let pages = [];
 /**
  * @type {{ offset: bigint, size: bigint }[]}
  */
@@ -77,7 +77,7 @@ function readInt16(address) {
  * @returns {number}
  */
 function readUint16(address) {
-  return (((readUint8(address) << 8) >>> 0) | readUint8(address + 1)) >>> 0;
+  return (((readUint8(address) << 8) >>> 0) | readUint8(address + 1n)) >>> 0;
 }
 
 /**
@@ -96,7 +96,7 @@ function writeUint16(address, value) {
   if (value < 0)
     value += 0x10000;
   writeUint8(address, (value >> 8) & 0xFF);
-  writeUint8(address + 1, value & 0xFF);
+  writeUint8(address + 1n, value & 0xFF);
 }
 
 /**
@@ -115,7 +115,7 @@ function readInt32(address) {
  * @returns {number}
  */
 function readUint32(address) {
-  return (((readUint16(address) << 16) >>> 0) | readUint16(address + 2)) >>> 0;
+  return (((readUint16(address) << 16) >>> 0) | readUint16(address + 2n)) >>> 0;
 }
 
 /**
@@ -134,7 +134,7 @@ function writeUint32(address, value) {
   if (value < 0)
     value += 0x100000000;
   writeUint16(address, (value >> 16) & 0xFFFF);
-  writeUint16(address + 2, value & 0xFFFF);
+  writeUint16(address + 2n, value & 0xFFFF);
 }
 
 /**
@@ -153,7 +153,7 @@ function readInt64(address) {
  * @returns {bigint}
  */
 function readUint64(address) {
-  return (BigInt(readUint32(address)) << 32n) | BigInt(readUint32(address + 4));
+  return (BigInt(readUint32(address)) << 32n) | BigInt(readUint32(address + 4n));
 }
 
 /**
@@ -172,7 +172,7 @@ function writeUint64(address, value) {
   if (value < 0n)
     value += 0x10000000000000000n;
   writeUint32(address, Number((value >> 16n) & 0xFFFFFFFFn));
-  writeUint32(address + 4, Number(value & 0xFFFFFFFFn));
+  writeUint32(address + 4n, Number(value & 0xFFFFFFFFn));
 }
 
 /**
@@ -193,6 +193,8 @@ function findBestFit(size) {
       if (smallestSize > size2 || (size2 === BigInt(Number.MAX_VALUE) && bestFit === null)) {
         bestFit = region.offset + region.size;
         smallestSize = size2;
+        if (smallestSize == size)
+          break;
       }
     }
   }
@@ -210,10 +212,10 @@ function malloc(size) {
 
   while (bestFit + size > totalSize) {
     pages.push(new ArrayBuffer(65536));
-    totalSize += 65536;
+    totalSize += 65536n;
   }
 
-  let insertIndex = 0;
+  let insertIndex = allocedRegions.length;
   for (let i = 0; i < allocedRegions.length; i++) {
     if (allocedRegions[i].offset > bestFit) {
       insertIndex = i;
@@ -236,9 +238,11 @@ function free(address) {
   const i = allocedRegions.findIndex(region => region.offset === address);
   if (i === -1)
     return;
-  if (i === allocedRegions.length - 1)
-    while (pages.length != 1 && allocedRegions[i - 1].offset + allocedRegions[i - 1].size <= (65536 * (pages.length - 1)))
+  if (i === allocedRegions.length - 1) {
+    const prevRegion = allocedRegions[i - 1] || { offset: 0n, size: 0n };
+    while (prevRegion.offset + prevRegion.size <= (65536 * (pages.length - 1)))
       pages.pop();
+  }
   allocedRegions.splice(i, 1);
 }
 
@@ -263,25 +267,25 @@ function realloc(address, size) {
   let bytesToCopy = currentRegion.size;
   let destOff = newAddr;
   let srcOff = address;
-  while (bytesToCopy / 8 >= 1) {
+  while (bytesToCopy / 8n >= 1n) {
     writeUint64(destOff, readUint64(srcOff));
-    destOff += 8;
-    srcOff += 8;
-    bytesToCopy -= 8;
+    destOff += 8n;
+    srcOff += 8n;
+    bytesToCopy -= 8n;
   }
-  if (bytesToCopy / 4 >= 1) {
+  if (bytesToCopy / 4n >= 1n) {
     writeUint32(destOff, readUint32(srcOff));
-    destOff += 4;
-    srcOff += 4;
-    bytesToCopy -= 4;
+    destOff += 4n;
+    srcOff += 4n;
+    bytesToCopy -= 4n;
   }
-  if (bytesToCopy / 2 >= 1) {
+  if (bytesToCopy / 2n >= 1n) {
     writeUint16(destOff, readUint16(srcOff));
-    destOff += 2;
-    srcOff += 2;
-    bytesToCopy -= 2;
+    destOff += 2n;
+    srcOff += 2n;
+    bytesToCopy -= 2n;
   }
-  if (bytesToCopy >= 1) {
+  if (bytesToCopy >= 1n) {
     writeUint8(destOff, readUint8(srcOff));
     ++destOff;
     ++srcOff;
@@ -291,7 +295,7 @@ function realloc(address, size) {
   return newAddr;
 }
 
-const exports = {
+const e = {
   malloc,
   free,
   realloc,
@@ -314,5 +318,5 @@ const exports = {
 };
 
 if (typeof window !== 'undefined')
-  Object.assign(window, exports);
-else module.exports = exports;
+  Object.assign(window, e);
+else module.exports = e;
