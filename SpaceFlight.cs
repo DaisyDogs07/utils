@@ -7,8 +7,9 @@ public class SpaceFlight : UdonSharpBehaviour {
   private VRCPlayerApi player;
   private bool isInCollider = false;
   private Vector2 movement = new Vector2(0.0f, 0.0f);
-  public float speed = 1.0f;
-  public float smoothness = 1.0f;
+  public float speed = 5.0f;
+  public float accelerationSmoothness = 0.225f;
+  public float decelerationSmoothness = 0.35f;
   public float gravity = 0.001f;
   public GameObject[] col;
 
@@ -24,9 +25,7 @@ public class SpaceFlight : UdonSharpBehaviour {
     movement.x = value;
   }
 
-  void FixedUpdate() {
-    float adjustedSpeed = Mathf.Min(Mathf.Max(speed, 0.01f), 5.0f);
-    Vector3 maxVelocity = new Vector3(player.GetStrafeSpeed(), player.GetJumpImpulse(), player.GetRunSpeed()) * adjustedSpeed;
+  private void Update() {
     Vector3 pos = player.GetPosition();
     bool isInCol = false;
     foreach (GameObject obj in col) {
@@ -39,14 +38,19 @@ public class SpaceFlight : UdonSharpBehaviour {
       }
     }
     if (isInCol != isInCollider)
-      player.SetGravityStrength(isInCol ? Mathf.Min(Mathf.Max(gravity, 0.001f), 1.0f) : 1.0f);
+      player.SetGravityStrength(isInCol ? Mathf.Clamp(gravity, 0.001f, 1.0f) : 1.0f);
     isInCollider = isInCol;
+  }
+
+  private void FixedUpdate() {
     if (!isInCollider)
       return;
+    player.Immobilize(movement != Vector2.zero);
+    float adjustedSpeed = Mathf.Clamp(speed, 0.01f, 10.0f);
     Quaternion rotation = player.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation;
     Vector3 currentVelocity = player.GetVelocity();
-    Vector3 targetVelocity = rotation * new Vector3(movement.x * maxVelocity.x, 0.0f, movement.y * maxVelocity.y) * adjustedSpeed;
-    Vector3 smoothedVelocity = Vector3.Lerp(currentVelocity, targetVelocity, 1.0f - Mathf.Exp(Mathf.Lerp(-1.0f, 0f, 1f - (1f / Mathf.Min(Mathf.Max(smoothness, 0.001f), 5.0f))) * Time.deltaTime));
+    Vector3 targetVelocity = (rotation * new Vector3(movement.x, 0.0f, movement.y)) * adjustedSpeed;
+    Vector3 smoothedVelocity = Vector3.Lerp(currentVelocity, targetVelocity, (1.0f - Mathf.Clamp01(currentVelocity.magnitude >= targetVelocity.magnitude ? accelerationSmoothness : decelerationSmoothness)) * Time.fixedDeltaTime);
     player.SetVelocity(smoothedVelocity);
   }
 }
