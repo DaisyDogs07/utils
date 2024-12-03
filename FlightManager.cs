@@ -4,9 +4,9 @@ using VRC.SDKBase;
 
 public class FlightManager : UdonSharpBehaviour {
   private VRCPlayerApi player;
-  private bool wasActive = false;
-  private Vector3 currentVelocity = Vector3.zero;
   private FlightManager manager;
+  private Vector3 currentVelocity = Vector3.zero;
+  private bool wasActive = false;
   [Header("General Settings")]
   public bool isManager = false;
   public bool allowDefaultMovement = true;
