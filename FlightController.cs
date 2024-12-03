@@ -14,7 +14,7 @@ public class FlightController : UdonSharpBehaviour {
   public float deceleration = 0.35f;
   public float gravity = 0.01f;
   public GameObject[] col;
-  public SpaceFlight[] children;
+  public FlightController[] children;
 
   private void Start() {
     player = Networking.LocalPlayer;
@@ -75,8 +75,8 @@ public class FlightController : UdonSharpBehaviour {
   private void FixedUpdate() {
     if (isController) {
       bool isDisabled = false;
-      foreach (SpaceFlight sf in children) {
-        if (sf.IsActive() && sf.disableController) {
+      foreach (FlightController child in children) {
+        if (child.IsActive() && child.disableController) {
           isDisabled = true;
           break;
         }
@@ -113,10 +113,10 @@ public class FlightController : UdonSharpBehaviour {
           }
         }
       }
-      foreach (SpaceFlight sf in children) {
-        if (sf.IsActive()) {
-          sf.UpdateVelocity();
-          if (sf.disableController)
+      foreach (FlightController child in children) {
+        if (child.IsActive()) {
+          child.UpdateVelocity();
+          if (child.disableController)
             return;
         }
       }
