@@ -8,14 +8,13 @@ public class FlightManager : UdonSharpBehaviour {
   private Vector3 currentVelocity = Vector3.zero;
   private FlightManager manager;
   [Header("General Settings")]
-  public bool isManager = true;
-  public GameObject obj;
+  public bool isManager = false;
   public bool allowDefaultMovement = true;
-  public float speed = 5.0f;
+  public float speed = 1.0f;
   public float acceleration = 0.225f;
   public float deceleration = 0.35f;
   [Header("Manager Settings")]
-  public float gravity = 0.01f;
+  public float gravity = 0.0f;
   public FlightManager[] children;
   [Header("Child Settings")]
   public Vector3 force;
@@ -46,23 +45,27 @@ public class FlightManager : UdonSharpBehaviour {
   }
 
   private bool IsActive() {
+    GameObject obj = this.gameObject;
     Vector3 pos = player.GetPosition();
-    if (!obj.activeInHierarchy)
-      return false;
-    Collider collider = obj.GetComponent<Collider>();
-    if (collider.bounds.Contains(pos))
-      return true;
-    return false;
+    pos = obj.transform.InverseTransformPoint(pos);
+    BoxCollider col = obj.GetComponent<BoxCollider>();
+    Vector3 halfSize = col.size * 0.5f;
+    Vector3 center = col.center;
+    Vector3 min = center - halfSize;
+    Vector3 max = center + halfSize;
+    return pos.x >= min.x && pos.x <= max.x &&
+      pos.y >= min.y && pos.y <= max.y &&
+      pos.z >= min.z && pos.z <= max.z;
   }
 
   private void UpdateVelocity() {
     Vector3 currentVelocity = manager.currentVelocity;
     Vector3 movementVector = new Vector3(force.x, isManager ? 0.0f : force.y, force.z) * speed;
-    Vector3 targetVelocity = Quaternion.Euler(forceRotation) * (
+    Vector3 targetVelocity = Quaternion.Euler(forceRotation) * (this.gameObject.transform.rotation * (
         isManager
           ? player.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation * movementVector
           : movementVector
-      );
+      ));
     if (isManager) {
       targetVelocity.y += force.y * speed;
       targetVelocity = Vector3.ClampMagnitude(targetVelocity, speed);
@@ -86,8 +89,8 @@ public class FlightManager : UdonSharpBehaviour {
   private void FixedUpdate() {
     if (isManager) {
       if (IsActive()) {
+        currentVelocity = player.GetVelocity();
         if (!wasActive) {
-          currentVelocity = player.GetVelocity();
           player.SetGravityStrength(0.0f);
           wasActive = true;
         }
