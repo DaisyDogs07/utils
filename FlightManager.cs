@@ -1,3 +1,20 @@
+// Copyright (c) 2024 DaisyDogs07
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+// associated documentation files (the "Software"), to deal in the Software without restriction,
+// including without limitation the rights to use, copy, modify, merge, publish, distribute,
+// sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or
+// substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+// NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -46,6 +63,8 @@ public class FlightManager : UdonSharpBehaviour {
 
   private bool IsActive() {
     GameObject obj = this.gameObject;
+    if (!obj.activeInHierarchy)
+      return false;
     Vector3 pos = player.GetPosition();
     pos = obj.transform.InverseTransformPoint(pos);
     BoxCollider col = obj.GetComponent<BoxCollider>();
@@ -61,14 +80,14 @@ public class FlightManager : UdonSharpBehaviour {
   private void UpdateVelocity() {
     Vector3 currentVelocity = manager.currentVelocity;
     Vector3 movementVector = new Vector3(force.x, isManager ? 0.0f : force.y, force.z) * speed;
-    Vector3 targetVelocity = Quaternion.Euler(forceRotation) * (this.gameObject.transform.rotation * (
-        isManager
-          ? player.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation * movementVector
-          : movementVector
-      ));
+    Vector3 targetVelocity = movementVector;
     if (isManager) {
+      targetVelocity = player.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation * targetVelocity;
       targetVelocity.y += force.y * speed;
       targetVelocity = Vector3.ClampMagnitude(targetVelocity, speed);
+    } else {
+      targetVelocity = this.gameObject.transform.rotation * targetVelocity;
+      targetVelocity = Quaternion.Euler(forceRotation) * targetVelocity;
     }
     Vector3 smoothedVelocity = Vector3.Lerp(
       currentVelocity,
