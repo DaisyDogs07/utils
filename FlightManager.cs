@@ -27,7 +27,7 @@ public class FlightManager : UdonSharpBehaviour {
   [Header("General Settings")]
   public bool isManager = false;
   public bool allowDefaultMovement = true;
-  public float speed = 1.0f;
+  public float speed = 5.0f;
   public float acceleration = 0.225f;
   public float deceleration = 0.35f;
   [Header("Manager Settings")]
