@@ -89,10 +89,10 @@ public class FlightManager : UdonSharpBehaviour {
       targetVelocity = this.gameObject.transform.rotation * targetVelocity;
       targetVelocity = Quaternion.Euler(forceRotation) * targetVelocity;
     }
-    Vector3 smoothedVelocity = Vector3.Lerp(
+    Vector3 smoothedVelocity = Vector3.LerpUnclamped(
       currentVelocity,
       targetVelocity,
-      (1.0f - Mathf.Clamp01(
+      (1.0f - (
         Vector3.Dot(targetVelocity - currentVelocity, currentVelocity) > 0 &&
         Vector3.Dot(currentVelocity.normalized, targetVelocity.normalized) > 0
           ? acceleration
