@@ -106,54 +106,54 @@ public class FlightManager : UdonSharpBehaviour {
   }
 
   private void FixedUpdate() {
-    if (isManager) {
-      if (IsActive()) {
-        currentVelocity = player.GetVelocity();
-        if (!wasActive) {
-          player.SetGravityStrength(0.0f);
-          wasActive = true;
-        }
-        bool movementAllowed = allowDefaultMovement;
-        bool[] activeChildren = new bool[children.Length];
-        for (int i = 0; i != children.Length; ++i) {
-          FlightManager child = children[i];
-          bool childActive = child.IsActive();
-          activeChildren[i] = childActive;
-          if (allowDefaultMovement && childActive && !child.allowDefaultMovement) {
-            movementAllowed = false;
-            break;
-          }
-        }
-        if (movementAllowed) {
-          if (!player.IsUserInVR()) {
-            bool up = Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space);
-            bool down = Input.GetKey(KeyCode.Q) || (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
-            if (up) {
-              if (down)
-                force.y = 0.0f;
-              else force.y = 1.0f;
-            } else if (down)
-              force.y = -1.0f;
-            else force.y = 0.0f;
-          }
-          player.Immobilize(force != Vector3.zero);
-          UpdateVelocity();
-        } else {
-          if (wasActive) {
-            player.Immobilize(true);
-            wasActive = false;
-          }
-        }
-        for (int i = 0; i != children.Length; ++i)
-          if (activeChildren[i])
-            children[i].UpdateVelocity();
-      } else {
-        if (wasActive) {
-          player.Immobilize(false);
-          player.SetGravityStrength(1.0f);
-          wasActive = false;
-        }
+    if (!isManager)
+      return;
+    if (!IsActive()) {
+      if (wasActive) {
+        player.Immobilize(false);
+        player.SetGravityStrength(1.0f);
+        wasActive = false;
+      }
+      return;
+    }
+    currentVelocity = player.GetVelocity();
+    if (!wasActive) {
+      player.SetGravityStrength(0.0f);
+      wasActive = true;
+    }
+    bool movementAllowed = allowDefaultMovement;
+    bool[] activeChildren = new bool[children.Length];
+    for (int i = 0; i != children.Length; ++i) {
+      FlightManager child = children[i];
+      bool childActive = child.IsActive();
+      activeChildren[i] = childActive;
+      if (allowDefaultMovement && childActive && !child.allowDefaultMovement) {
+        movementAllowed = false;
+        break;
       }
     }
+    if (movementAllowed) {
+      if (!player.IsUserInVR()) {
+        bool up = Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space);
+        bool down = Input.GetKey(KeyCode.Q) || (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+        if (up) {
+          if (down)
+            force.y = 0.0f;
+          else force.y = 1.0f;
+        } else if (down)
+          force.y = -1.0f;
+        else force.y = 0.0f;
+      }
+      player.Immobilize(force != Vector3.zero);
+      UpdateVelocity();
+    } else {
+      if (wasActive) {
+        player.Immobilize(true);
+        wasActive = false;
+      }
+    }
+    for (int i = 0; i != children.Length; ++i)
+      if (activeChildren[i])
+        children[i].UpdateVelocity();
   }
 }
