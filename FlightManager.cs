@@ -105,6 +105,20 @@ public class FlightManager : UdonSharpBehaviour {
     player.SetVelocity(smoothedVelocity);
   }
 
+  private void Update() {
+    if (!isManager || player.IsUserInVR())
+      return;
+    bool up = Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space);
+    bool down = Input.GetKey(KeyCode.Q) || (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+    if (up) {
+      if (down)
+        force.y = 0.0f;
+      else force.y = 1.0f;
+    } else if (down)
+      force.y = -1.0f;
+    else force.y = 0.0f;
+  }
+
   private void FixedUpdate() {
     if (!isManager)
       return;
@@ -133,17 +147,6 @@ public class FlightManager : UdonSharpBehaviour {
       }
     }
     if (movementAllowed) {
-      if (!player.IsUserInVR()) {
-        bool up = Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space);
-        bool down = Input.GetKey(KeyCode.Q) || (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
-        if (up) {
-          if (down)
-            force.y = 0.0f;
-          else force.y = 1.0f;
-        } else if (down)
-          force.y = -1.0f;
-        else force.y = 0.0f;
-      }
       player.Immobilize(force != Vector3.zero);
       UpdateVelocity();
     } else {
