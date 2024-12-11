@@ -102,7 +102,6 @@ public class FlightManager : UdonSharpBehaviour {
     if (isManager)
       smoothedVelocity.y -= gravity * Time.fixedDeltaTime;
     manager.currentVelocity = smoothedVelocity;
-    player.SetVelocity(smoothedVelocity);
   }
 
   private void Update() {
@@ -158,5 +157,6 @@ public class FlightManager : UdonSharpBehaviour {
     for (int i = 0; i != children.Length; ++i)
       if (activeChildren[i])
         children[i].UpdateVelocity();
+    player.SetVelocity(currentVelocity);
   }
 }
