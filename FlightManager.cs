@@ -79,8 +79,7 @@ public class FlightManager : UdonSharpBehaviour {
 
   private void UpdateVelocity() {
     Vector3 currentVelocity = manager.currentVelocity;
-    Vector3 movementVector = new Vector3(force.x, isManager ? 0.0f : force.y, force.z) * speed;
-    Vector3 targetVelocity = movementVector;
+    Vector3 targetVelocity = new Vector3(force.x, isManager ? 0.0f : force.y, force.z) * speed;
     if (isManager) {
       targetVelocity = player.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).rotation * targetVelocity;
       targetVelocity.y += force.y * speed;
