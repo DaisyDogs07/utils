@@ -65,16 +65,15 @@ public class FlightManager : UdonSharpBehaviour {
     GameObject obj = this.gameObject;
     if (!obj.activeInHierarchy)
       return false;
-    Vector3 pos = player.GetPosition();
-    pos = obj.transform.InverseTransformPoint(pos);
+    Vector3 pos = obj.transform.InverseTransformPoint(player.GetPosition());
     BoxCollider col = obj.GetComponent<BoxCollider>();
-    Vector3 halfSize = col.size * 0.5f;
+    Vector3 halfSize = col.size / 2.0f;
     Vector3 center = col.center;
     Vector3 min = center - halfSize;
     Vector3 max = center + halfSize;
-    return pos.x >= min.x && pos.x <= max.x &&
-      pos.y >= min.y && pos.y <= max.y &&
-      pos.z >= min.z && pos.z <= max.z;
+    return (pos.x >= min.x && pos.x <= max.x) &&
+      (pos.y >= min.y && pos.y <= max.y) &&
+      (pos.z >= min.z && pos.z <= max.z);
   }
 
   private void UpdateVelocity() {
